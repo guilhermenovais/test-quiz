@@ -133,3 +133,23 @@ def test_correct_selected_choices_exceeding_max_selections_raises_exception():
 
     with pytest.raises(Exception):
         question.correct_selected_choices([c1.id, c2.id])
+
+
+@pytest.fixture
+def question_with_multiple_choices():
+    question = Question(title='Sample Question', max_selections=2)
+    c1 = question.add_choice('Option A', False)
+    c2 = question.add_choice('Option B', True)
+    c3 = question.add_choice('Option C', True)
+    return question
+
+
+def test_fixture_question_has_three_choices(question_with_multiple_choices):
+    assert len(question_with_multiple_choices.choices) == 3
+
+
+def test_fixture_question_correct_selected_choices(question_with_multiple_choices):
+    result = question_with_multiple_choices.correct_selected_choices([1, 2])
+    assert result == [2]
+    result = question_with_multiple_choices.correct_selected_choices([2, 3])
+    assert result == [2, 3]
